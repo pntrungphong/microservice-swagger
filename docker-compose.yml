@@ -4,15 +4,14 @@ services:
     build: './web'
     ports:
       - "3000:3000"
-
-  search:
-    build: './search'
-    ports:
-      - "3001:3000"
-    depends_on: 
-      - db
-    environment:
-      - MONGO_DB_URI=mongodb://db/microservices
+  # search:
+  #   build: './search'
+  #   ports:
+  #     - "3001:3000"
+  #   depends_on: 
+  #     - db
+  #   environment:
+  #     - MONGO_DB_URI=mongodb://db/microservices
 
   books:
     build: './books'
@@ -36,16 +35,36 @@ services:
     image: mongo
     ports:
       - "27017:27017"
+    networks:
+      - default
+
+  swagger-editor:
+    image: swaggerapi/swagger-editor
+    container_name: "swagger-editor"
+    ports:
+      - "8081:8080"
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "swagger-ui"
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./swagger/openapi.json:/openapi.json
+    environment:
+      SWAGGER_JSON: /openapi.json
 
   nginx:
     image: nginx:latest
     ports:
-      - "8080:8080"
+      - "8080:80"
+    networks:
+      - default    
     volumes:
       - ./web/public:/srv/www/static
       - ./default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - web
       - books
-      - search
+      # - search
       - videos

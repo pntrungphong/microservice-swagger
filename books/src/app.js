@@ -10,8 +10,8 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/v1/books", async (req, res) => {
-  const books = await Book.find({});
-  res.json(books);
+  // const books = await Book.find({});
+  res.json("books");
 });
 
 app.post("/api/v1/books", async (req, res) => {
